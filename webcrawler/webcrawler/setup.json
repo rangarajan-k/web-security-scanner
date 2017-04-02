@@ -1,0 +1,67 @@
+[
+  {
+    "starting_url": "https://app1.com",
+    "logins": [
+      {
+        "url": "https://app1.com/admin/index.php?page=login",
+        "username": "admin",
+        "password": "admin"
+      },
+      {
+        "url": "https://app1.com/users/login.php",
+        "username": "scanner1",
+        "password": "scanner1"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app4.com",
+    "logins": [
+      {
+        "url": "https://app4.com/index.php",
+        "username": "admin@admin.com",
+        "password": "admin"
+      },
+      {
+        "url": "https://app4.com/index.php",
+        "username": "dev@dev.com",
+        "password": "developer"
+      },
+      {
+        "url": "https://app4.com/index.php",
+        "username": "manager@manager.com",
+        "password": "manager"
+      },
+      {
+        "url": "https://app4.com/index.php",
+        "username": "user@user.com",
+        "password": "user"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app5.com",
+    "logins": [
+      {
+        "url": "https://app5.com/www/index.php",
+        "username": "admin",
+        "password": "admin"
+      },
+      {
+        "url": "https://app5.com/www/index.php",
+        "username": "professor",
+        "password": "professor"
+      },
+      {
+        "url": "https://app5.com/www/index.php",
+        "username": "student",
+        "password": "student"
+      },
+      {
+        "url": "https://app5.com/www/index.php",
+        "username": "student2",
+        "password": "student2"
+      }
+    ]
+  }
+]
