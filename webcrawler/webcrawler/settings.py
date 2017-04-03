@@ -14,7 +14,7 @@ BOT_NAME = 'webcrawler'
 SPIDER_MODULES = ['webcrawler.spiders']
 NEWSPIDER_MODULE = 'webcrawler.spiders'
 
-DEPTH_LIMIT = 10
+DEPTH_LIMIT = 100
 SCHEDULER_DISK_QUEUE = 'scrapy.squeues.PickleFifoDiskQueue'
 SCHEDULER_MEMORY_QUEUE = 'scrapy.squeues.FifoMemoryQueue'
 
