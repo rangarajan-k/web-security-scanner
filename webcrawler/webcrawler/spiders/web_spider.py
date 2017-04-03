@@ -8,16 +8,17 @@ from webcrawler.items import FormItem
 from scrapy.http import Request
 
 
-class WebSpider(InitSpider):
+class WebSpider(CrawlSpider):
     name = "web"
     start_urls = []
     login_urls = []
     login_details = []
     app_index = 0
-    login_index = 0
+    login_index = 1
     total_login = 0
+    total_items = []
 
-    rules = [Rule(link_extractor=LxmlLinkExtractor(), callback='parse_form', follow=False)]
+    rules = [Rule(link_extractor=LxmlLinkExtractor(deny='logout'), callback='parse_form', follow=True)]
     with open('setup.json') as setup_file:
         data = json.load(setup_file)
 
@@ -25,8 +26,8 @@ class WebSpider(InitSpider):
     #     super(WebSpider, self).__init__(*args, **kwargs)
     #     self.app_index = app_index
 
-    def init_request(self):
-        self.logger.info("Init Request")
+    def start_requests(self):
+        self.logger.info("Start Request")
         self.start_urls.append(self.data[self.app_index]["starting_url"])
         self.total_login = len(self.data[self.app_index]['logins'])
 
@@ -35,26 +36,33 @@ class WebSpider(InitSpider):
             self.login_details.append({'username': login['username'], 'password': login['password']})
 
         # Login first before crawling starts
-        return Request(url=self.login_urls[self.login_index], callback=self.login)
+        return [Request(url=self.login_urls[self.login_index], callback=self.login, dont_filter=True)]
 
     def parse_form(self, response):
         self.logger.info("Parse URL: %s", response.url)
-        items = []
         for formPosition in range(0, len(response.css('form'))):
             form = response.css('form')[formPosition]
             item = FormItem()
             action = response.css('form::attr(action)').extract()[formPosition]
-            actionPage = response.urljoin(action)
-            item['action'] = actionPage
+            action_page = response.urljoin(action)
+            item['action'] = action_page
             item['method'] = response.css('form::attr(method)').extract()[formPosition]
             item['param'] = []
+            item['login'] = self.login_details[self.login_index]
             item['reflected_pages'] = [response.url]
-            if response.url != actionPage:
-                item['reflected_pages'].append(actionPage)
+            if response.url != action_page:
+                item['reflected_pages'].append(action_page)
             for param in form.css('input::attr(name)').extract():
                 item['param'].append(param)
-            items.append(item)
-        yield {'key': items}
+            if item not in self.total_items:
+                self.total_items.append(item)
+                yield item
+
+
+    def extract_links(self, response):
+        for link in LxmlLinkExtractor().extract_links(response):
+            Request(url=link.url, callback=self.parse_form)
+            return Request(url=link.url, callback=self.extract_links)
 
     def login(self, response):
         self.logger.info("Login")
@@ -80,4 +88,4 @@ class WebSpider(InitSpider):
             return None
         else:
             self.logger.info("Login succeed")
-            return self.initialized
+            return Request(url=response.url, dont_filter=True)
