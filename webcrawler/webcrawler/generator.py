@@ -93,6 +93,15 @@ print "\nWriting imports..."
 attackScript.write(initial)
 attackScript.write(imports)
 print "Written imports...\n"
+
+#===================== Initialise values==============================
+initialiseVals = "# blacklist of button values to avoid\n"
+initialiseVals += "blacklist = (\"cancel\", \"remove\", \"delete\")\n"
+
+print "\nWriting variables to initiliase..."
+attackScript.write(initialiseVals)
+print "Written variables to initiliase...\n"
+
 #===================== Logging In ====================================
 username = ''
 password = ''
@@ -131,11 +140,79 @@ attackScript.write(loginCredentials)
 
 #===================== Attacking =====================================
 # via requests
-requestsStart = "requests.packages.urllib3.disable_warnings(InsecureRequestWarning)\n"
-requestsStart += "session = requests.session()\n"
+requestsStart = "\n#===== Start of requests powered attacker====\n"
+requestsStart += "requests.packages.urllib3.disable_warnings(InsecureRequestWarning)\n"
+requestsStart += "session = requests.session()\n\n"
+requestsStart += "urlComponents = url.split(\"/\")\n"
+requestsStart += "root = urlComponents[0]+\"//\"+ urlComponents[2]\n\n"
 print "\nWriting Start of Requests powered attacker..."
 attackScript.write(requestsStart)
 print "Written Start of Requests powered attacker..."
+
+# useful functions for attacking
+requestsFunc = "def check_for_more_form(r):\n"
+requestsFunc += "	checkForForm = True\n"
+requestsFunc += "	while checkForForm:\n"
+requestsFunc += "		insideForm = False\n"
+requestsFunc += "		submitForm = False\n"
+requestsFunc += "		newTarget = None\n"
+requestsFunc += "		formMethod = None\n"
+requestsFunc += "		param = {}\n\n"
+requestsFunc += "		# check if need to submit form again (eg. if there is a preview stage)\n"
+requestsFunc += "		for line in r.text.splitlines():\n"
+requestsFunc += "			if \"<form\" in line.lower():\n"
+requestsFunc += "				found =  re.match(r\".*action\s*=\s*\\\"\s*([^\\\"]*)\s*\\\"\", line, re.IGNORECASE)\n"
+requestsFunc += "				if found:\n"
+requestsFunc += "					newTarget = found.group(1)\n"
+requestsFunc += "					if \"http\" not in newTarget:\n"
+requestsFunc += "						newTarget = root + newTarget\n"
+requestsFunc += "				found =  re.match(r\".*method\s*=\s*\\\"\s*([^\\\"]*)\s*\\\"\", line, re.IGNORECASE)\n"
+requestsFunc += "				if found:\n"
+requestsFunc += "					formMethod = found.group(1)\n"
+requestsFunc += "				insideForm = True\n"
+requestsFunc += "				param.clear()\n"
+requestsFunc += "				print \"entered form\"\n"
+requestsFunc += "			elif \"</form\" in line.lower():\n"
+requestsFunc += "				insideForm = False\n"
+requestsFunc += "				print \"exited form\"\n"
+requestsFunc += "			if insideForm:\n"
+requestsFunc += "				if \"input\" in line.lower() and \"submit\" in line.lower():\n"
+requestsFunc += "					if any(s in line.lower() for s in blacklist):\n"
+requestsFunc += "						newTarget = None\n"
+requestsFunc += "						formMethod = None\n"
+requestsFunc += "						param.clear\n"	
+requestsFunc += "				elif \"input\" in line:\n"	
+requestsFunc += "					name = \"\"\n"
+requestsFunc += "					value = \"\"\n"
+requestsFunc += "					found =  re.match(r\".*name\s*=\s*\\\"\s*([^\\\"]*)\s*\\\"\", line, re.IGNORECASE)\n"
+requestsFunc += "					if found:\n"
+requestsFunc += "						name = found.group(1)\n"
+requestsFunc += "					found =  re.match(r\".*value\s*=\s*\\\"\s*([^\\\"]*)\s*\\\"\", line, re.IGNORECASE)\n"
+requestsFunc += "					if found:\n"
+requestsFunc += "						value = found.group(1)\n"
+requestsFunc += "					if not found or not value.strip():\n"
+requestsFunc += "						insideForm = False\n"
+requestsFunc += "						newTarget = None\n"
+requestsFunc += "						formMethod = None\n"
+requestsFunc += "						param.clear()\n"
+requestsFunc += "					param.update({name:value})\n"
+requestsFunc += "					print name + " " + value\n"
+requestsFunc += "				elif \"textarea\" in line:\n"
+requestsFunc += "					insideForm = False\n"
+requestsFunc += "					newTarget = None\n"
+requestsFunc += "					formMethod = None\n"
+requestsFunc += "					param.clear()\n\n"		
+requestsFunc += "		if newTarget and formMethod:\n"
+requestsFunc += "			print newTarget\n"
+requestsFunc += "			if \"post\" in formMethod.lower():\n"
+requestsFunc += "				r = session.post(newTarget, data=param, verify=False)\n"
+requestsFunc += "			elif \"get\" in formMethod.lower():\n"
+requestsFunc += "				r = requests.get(url, params=param, verify=False)\n"
+requestsFunc += "		else:\n"
+requestsFunc += "			checkForForm = False\n\n"
+print "\nWriting useful functions of Requests powered attacker..."
+attackScript.write(requestsFunc)
+print "Written useful functions of Requests powered attacker..."
 
 # login via requests
 requestsLogin = "login_data = dict(" + usernameField + "='" + username + "', " + passwordField + "='" + password + "')\n"
@@ -151,46 +228,37 @@ print "Written Login of Requests powered attacker..."
 
 # navigate to exploited page via requests
 requestsAtk = ""
+
+def loop_params(method, param):
+	string =""
+	link = "="
+	a = ""
+	if method:
+		link = ":"
+		a = "\""
+	for y in param:
+		count = param.index(y)
+		string += a + param[count]['key'] + a + link +"\"" + param[count]['value'] +"\""
+		if (count+1) < len(param):
+			string += ","	
+	return string
+
 for x in exploitData: 
 	requestsAtk += "url =\"" + x['reflected_page'] + "\"\n"
-	if "GET" in x['method']:
-		print "GET"
+	if "get" in x['method'].lower():
+		print "get"
 		requestsAtk += "exploit_data = {"
-		counter = 0
-		for y in x['params']:
-			counter += 1
-			requestsAtk += "\"" + x['params'][0]['key'] + "\":\"" + x['params'][0]['value'] +"\""
-			if counter < len(x['params']):
-				requestsAtk += ","
+		requestsAtk += loop_params(True, x['params'])
 		requestsAtk += "}\n"
 		requestsAtk += "r = requests.get(url, params=exploit_data, verify=False)\n"
-	elif "POST" in x['method']:
-		print "POST"
+	elif "post" in x['method'].lower():
+		print "post"
 		requestsAtk += "exploit_data = dict("
-		counter = 0
-		for y in x['params']:
-			counter += 1
-			requestsAtk += "" + x['params'][0]['key'] + "=\"" + x['params'][0]['value'] +"\""
-			if counter < len(x['params']):
-				requestsAtk += ","
+		requestsAtk += loop_params(False, x['params'])
 		requestsAtk += ") #build params\n"
 		requestsAtk += "r = session.post(url, data=exploit_data, verify=False)\n"
-	requestsAtk += "print \"attacked \" + url + \" ...\"\n\n"
-
-
-# for x in exploitData: 
-# 	for y in x.keys():
-# 		requestsAtk += "url =\"" + y + "\"\n"
-# 		requestsAtk += "exploit_data = dict("
-# 		counter = 0
-# 		for z in x[y][0]['params'][0].keys():
-# 			counter += 1
-# 			requestsAtk += "" + z + "=\"" + x[y][0]['params'][0][z] +"\""
-# 			if counter < len(x[y][0]['params'][0]):
-# 				requestsAtk += ","
-# 		requestsAtk += ") #build params\n"
-# 		requestsAtk += "r = session.post(url, data=exploit_data, verify=False)\n"
-# 		requestsAtk += "print \"attacked \" + url + \" ...\"\n\n"
+	requestsAtk += "print \"attacked \" + url + \" ...\"\n"
+	requestsAtk +="check_for_more_form(r)\n\n"
 print "\nWriting Attack module of Requests powered attacker..."
 attackScript.write(requestsAtk)
 print "Written Attack of Requests powered attacker..."
