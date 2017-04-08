@@ -95,18 +95,26 @@ class WebSpider(CrawlSpider):
         for formPosition in range(0, len(response.css('form'))):
             form = response.css('form')[formPosition]
             item = FormItem()
+
+            # Action
             action = response.css('form::attr(action)').extract()[formPosition]
             action_page = response.urljoin(action)
             item['action'] = action_page
+            # Method
             item['method'] = response.css('form::attr(method)').extract()[formPosition]
-            item['param'] = []
+            # Reflected_page
             if not len(self.login_details) == 0:
                 item['login'] = self.login_details[self.login_index]
             item['reflected_pages'] = [response.url]
             if response.url != action_page:
                 item['reflected_pages'].append(action_page)
+            # Param
+            item['param'] = []
             for param in form.css('input::attr(name)').extract():
                 item['param'].append(param)
+            for param in form.css('textarea::attr(name)').extract():
+                item['param'].append(param)
+
             if item not in self.total_items:
                 self.total_items.append(item)
                 yield item
