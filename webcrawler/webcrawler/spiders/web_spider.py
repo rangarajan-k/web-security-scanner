@@ -123,12 +123,18 @@ class WebSpider(CrawlSpider):
                 item['reflected_pages'].append(action_page)
             # Param
             item['param'] = []
-            for param in form.css('input::attr(name)').extract():
-                item['param'].append(param)
-            for param in form.css('textarea::attr(name)').extract():
-                item['param'].append(param)
+            html_types = ['input', 'textarea', 'select']
+            for html in html_types:
+                for tag in form.css(html):
+                    name = tag.css('::attr(name)').extract_first()
+                    value = tag.css('::attr(value)').extract_first()
+                    type = tag.css('::attr(type)').extract_first()
+                    if type == 'button' or type == 'submit' or type == 'reset':
+                        continue
+                    if name is not None:
+                        item['param'].append(name)
 
-            if item not in self.total_items:
+            if item not in self.total_items and len(item['param']) != 0:
                 self.total_items.append(item)
                 yield item
 

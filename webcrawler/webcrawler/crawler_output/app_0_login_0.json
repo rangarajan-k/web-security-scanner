@@ -1,0 +1,3 @@
+[
+{"action": "https://app1.com/admin/index.php", "param": ["page"], "method": "GET", "reflected_pages": ["https://app1.com/admin/index.php"]}
+]

@@ -52,7 +52,7 @@ def fill_login_form_data(form, login_details):
                 form_data[username_key] = login_details['username']
             elif name == password_key:
                 form_data[password_key] = login_details['password']
-            elif type == 'button' or type == 'submit': # Skip all button and submit
+            elif type == 'button' or type == 'submit' or type == 'reset': # Skip all button and submit
                 continue
             elif value is not None: # Use preset value
                 form_data[name] = value
