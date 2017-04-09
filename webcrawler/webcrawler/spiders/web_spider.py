@@ -34,6 +34,7 @@ class WebSpider(CrawlSpider):
 
     # Rule for CrawlSpider
     rules = [Rule(link_extractor=LxmlLinkExtractor(deny='logout'), callback='parse_url', process_links='process_links', follow=True)]
+    handle_httpstatus_list = [500]
 
     def __init__(self, app_index=0, login_index=1, *args, **kwargs):
         super(WebSpider, self).__init__(*args, **kwargs)
