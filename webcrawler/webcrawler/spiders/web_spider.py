@@ -6,7 +6,7 @@ from scrapy.linkextractors.lxmlhtml import LxmlLinkExtractor
 from scrapy.spiders import Rule
 from scrapy.http import Request
 from webcrawler.items import FormItem
-
+from login_forms import check_login_form, fill_login_form_data
 
 class WebSpider(CrawlSpider):
     name = "web"
@@ -92,16 +92,15 @@ class WebSpider(CrawlSpider):
             yield item
 
         # Parsing forms
-        for formPosition in range(0, len(response.css('form'))):
-            form = response.css('form')[formPosition]
+        forms = response.css('form')
+        for form in forms:
             item = FormItem()
-
             # Action
-            action = response.css('form::attr(action)').extract()[formPosition]
+            action = form.css('::attr(action)').extract_first()
             action_page = response.urljoin(action)
             item['action'] = action_page
             # Method
-            item['method'] = response.css('form::attr(method)').extract()[formPosition]
+            item['method'] = form.css('::attr(method)').extract_first()
             # Reflected_page
             if not len(self.login_details) == 0:
                 item['login'] = self.login_details[self.login_index]
@@ -121,18 +120,24 @@ class WebSpider(CrawlSpider):
 
     def login(self, response):
         self.logger.info("Login")
+        setup_username_key = self.data[self.app_index]['logins'][self.login_index].get('username_key', None)
+        setup_password_key = self.data[self.app_index]['logins'][self.login_index].get('password_key', None)
+        
         # Search for login form and login
         for form_position in range(0,len(response.css('form'))):
             form = response.css('form')[form_position]
-            params = [param for param in form.css('input::attr(name)').extract()]
-            if params == ['username', 'password']:
+            username_key, password_key = check_login_form(form, setup_username_key, setup_password_key)
+            
+            if username_key is not None and password_key is not None:
+                form_data = fill_login_form_data(form, self.login_details[self.login_index], username_key, password_key)
+                self.logger.info(form)
+                self.logger.info(form_data)
                 return [scrapy.FormRequest.from_response(
                     response,
                     formnumber=form_position,
-                    formdata=self.login_details[self.login_index],
+                    formdata=form_data,
                     callback=self.after_login
                 )]
-        # Couldn't found login form, log error
         self.logger.critical("Couldn't found form for login!")
 
     def after_login(self, response):
