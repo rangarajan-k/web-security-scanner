@@ -46,6 +46,11 @@ class WebSpider(CrawlSpider):
         login = self.data[self.app_index]["logins"][self.login_index]
         self.login_url = login['url']
         self.login_detail = {'username': login['username'], 'password': login['password']}
+        setup_username_key = login.get('username_key', None)
+        setup_password_key = login.get('password_key', None)
+        self.login_detail['username_key'] = setup_username_key
+        self.login_detail['password_key'] = setup_password_key
+
         self.current_domain = urlparse.urlparse(self.login_url).netloc
 
         # Login first before crawling starts
@@ -108,6 +113,8 @@ class WebSpider(CrawlSpider):
             item['action'] = action_page
             # Method
             item['method'] = form.css('::attr(method)').extract_first()
+            if item['method'] is None:
+                item['method'] = 'GET'
             # Reflected_page
             item['login'] = self.login_detail
             item['reflected_pages'] = [response.url]
@@ -126,16 +133,19 @@ class WebSpider(CrawlSpider):
 
     def login(self, response):
         self.logger.info("Login")
-        setup_username_key = self.data[self.app_index]['logins'][self.login_index].get('username_key', None)
-        setup_password_key = self.data[self.app_index]['logins'][self.login_index].get('password_key', None)
+        setup_username_key = self.login_detail['username_key']
+        setup_password_key = self.login_detail['password_key']
         
         # Search for login form and login
         for form_position in range(0,len(response.css('form'))):
             form = response.css('form')[form_position]
             username_key, password_key = check_login_form(form, setup_username_key, setup_password_key)
+            # Update self.login_details
+            self.login_detail['username_key'] = username_key
+            self.login_detail['password_key'] = password_key
             
             if username_key is not None and password_key is not None:
-                form_data = fill_login_form_data(form, self.login_detail, username_key, password_key)
+                form_data = fill_login_form_data(form, self.login_detail)
                 self.logger.info(form)
                 self.logger.info(form_data)
                 return [scrapy.FormRequest.from_response(

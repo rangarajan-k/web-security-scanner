@@ -38,7 +38,9 @@ def check_login_form(form, setup_username_key, setup_password_key):
                 username_key = name
     return username_key, password_key
 
-def fill_login_form_data(form, login_details, username_key, password_key):
+def fill_login_form_data(form, login_details):
+    username_key = login_details['username_key']
+    password_key = login_details['password_key']
     form_data = dict()
     inputs = form.css('input');
     for input in inputs:
