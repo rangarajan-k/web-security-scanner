@@ -8,6 +8,7 @@ from scrapy.http import Request
 from webcrawler.items import FormItem
 from login_forms import check_login_form, fill_login_form_data
 
+
 class WebSpider(CrawlSpider):
     name = "web"
 
@@ -23,9 +24,9 @@ class WebSpider(CrawlSpider):
         data = json.load(setup_file)
     # Properties from setup.json file
     total_login = 0
-    login_details = []
-    login_urls = []
-    start_urls = []
+    login_detail = {}
+    login_url = ''
+    current_domain = ''
 
     # Seen urls using for filter in process_links
     seen_urls = dict() # dict of "url" : "seen_time"
@@ -41,21 +42,27 @@ class WebSpider(CrawlSpider):
 
     def start_requests(self):
         self.logger.info("Start Request")
-        self.start_urls.append(self.data[self.app_index]["starting_url"])
         self.total_login = len(self.data[self.app_index]['logins'])
-
-        for login in self.data[self.app_index]["logins"]:
-            self.login_urls.append(login['url'])
-            self.login_details.append({'username': login['username'], 'password': login['password']})
+        login = self.data[self.app_index]["logins"][self.login_index]
+        self.login_url = login['url']
+        self.login_detail = {'username': login['username'], 'password': login['password']}
+        self.current_domain = urlparse.urlparse(self.login_url).netloc
 
         # Login first before crawling starts
-        return [Request(url=self.login_urls[self.login_index], callback=self.login, dont_filter=True)]
+        return [Request(url=self.login_url, callback=self.login, dont_filter=True)]
 
-    # Skip link that crawler has seen its same url and param more than MAX_SEEN times
+    # Skip link that:
+    # not the same domain
+    # crawler has seen its same url and param more than MAX_SEEN times
     def process_links(self, links):
         for link in links:
             url_parsed = urlparse.urlparse(link.url)
             url_without_query = url_parsed.scheme + "://" + url_parsed.netloc + url_parsed.path
+
+            # skip link that not the same domain
+            if url_parsed.netloc != self.current_domain:
+                continue
+
             params = urlparse.parse_qsl(url_parsed.query)
             # allow link without param, will automatically being filtered if visited
             if len(params) == 0:
@@ -102,8 +109,7 @@ class WebSpider(CrawlSpider):
             # Method
             item['method'] = form.css('::attr(method)').extract_first()
             # Reflected_page
-            if not len(self.login_details) == 0:
-                item['login'] = self.login_details[self.login_index]
+            item['login'] = self.login_detail
             item['reflected_pages'] = [response.url]
             if response.url != action_page:
                 item['reflected_pages'].append(action_page)
@@ -129,7 +135,7 @@ class WebSpider(CrawlSpider):
             username_key, password_key = check_login_form(form, setup_username_key, setup_password_key)
             
             if username_key is not None and password_key is not None:
-                form_data = fill_login_form_data(form, self.login_details[self.login_index], username_key, password_key)
+                form_data = fill_login_form_data(form, self.login_detail, username_key, password_key)
                 self.logger.info(form)
                 self.logger.info(form_data)
                 return [scrapy.FormRequest.from_response(
@@ -143,7 +149,7 @@ class WebSpider(CrawlSpider):
     def after_login(self, response):
         self.logger.info("After Login")
         # check login succeed before going on
-        if not self.login_details[self.login_index]['username'] in response.body:
+        if not self.login_detail['username'] in response.body:
             self.logger.critical("Login failed")
             return None
         else:
