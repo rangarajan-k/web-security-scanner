@@ -8,9 +8,49 @@
         "password": "admin"
       },
       {
+        "url": "https://app1.com/admin/index.php?page=login",
+        "username": "adamd",
+        "password": "adamd"
+      },
+      {
         "url": "https://app1.com/users/login.php",
         "username": "scanner1",
         "password": "scanner1"
+      },
+      {
+        "url": "https://app1.com/users/login.php",
+        "username": "scanner2",
+        "password": "scanner2"
+      },
+      {
+        "url": "https://app1.com/users/login.php",
+        "username": "bryce",
+        "password": "bryce"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app2.com",
+    "logins": [
+      {
+        "url": "https://app2.com/files/news.php",
+        "username": "admin",
+        "password": "adminadmin"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app3.com",
+    "logins": [
+      {
+        "url": "https://app3.com/admins/",
+        "username": "admin",
+        "password": "admin"
+      },
+      {
+        "url": "https://app3.com/",
+        "username": "test@test.com",
+        "password": "testtest"
       }
     ]
   },
@@ -18,24 +58,14 @@
     "starting_url": "https://app4.com",
     "logins": [
       {
-        "url": "https://app4.com/index.php",
-        "username": "admin@admin.com",
+        "url": "https://app4.com/catalog/admin/",
+        "username": "admin",
         "password": "admin"
       },
       {
-        "url": "https://app4.com/index.php",
-        "username": "dev@dev.com",
-        "password": "developer"
-      },
-      {
-        "url": "https://app4.com/index.php",
-        "username": "manager@manager.com",
-        "password": "manager"
-      },
-      {
-        "url": "https://app4.com/index.php",
-        "username": "user@user.com",
-        "password": "user"
+        "url": "https://app4.com/catalog/",
+        "username": "test@test.com",
+        "password": "testtest"
       }
     ]
   },
@@ -43,25 +73,75 @@
     "starting_url": "https://app5.com",
     "logins": [
       {
-        "url": "https://app5.com/www/index.php",
+        "url": "https://app5.com/",
+        "username": "admin",
+        "password": "adminadmin"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app6.com",
+    "logins": [
+      {
+        "url": "https://app6.com/admin.php",
+        "username": "admin",
+        "password": "adminadmin"
+      },
+      {
+        "url": "https://app6.com/",
+        "username": "admin",
+        "password": "adminadmin"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app7.com",
+    "logins": [
+      {
+        "url": "https://app7.com/",
+        "username": "test@test.com",
+        "password": "testtest"
+      },
+      {
+        "url": "https://app7.com/oc-admin/index.php",
+        "username": "admin",
+        "password": "admin"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app8.com",
+    "logins": [
+      {
+        "url": "https://app8.com/upload/",
+        "username": "test@test.com",
+        "password": "test"
+      },
+      {
+        "url": "https://app8.com/upload/admin/",
+        "username": "admin",
+        "password": "admin"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app9.com",
+    "logins": [
+      {
+        "url": "https://app9.com/index-test.php",
         "username": "admin",
         "password": "admin"
       },
       {
-        "url": "https://app5.com/www/index.php",
-        "username": "professor",
-        "password": "professor"
-      },
-      {
-        "url": "https://app5.com/www/index.php",
-        "username": "student",
-        "password": "student"
-      },
-      {
-        "url": "https://app5.com/www/index.php",
-        "username": "student2",
-        "password": "student2"
+        "url": "https://app9.com/index-test.php",
+        "username": "test",
+        "password": "test"
       }
+    ]
+  },
+  {
+    "starting_url": "https://app10.com",
+    "logins": [
     ]
   }
 ]
