@@ -13,6 +13,10 @@ import time
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 import os
 
+os.system("rm -r confirmed_exploits/*")
+os.system("rm injector_log.txt")
+log_file = open("injector_log.txt","w+")
+log_text = ""
 output_file_path = "confirmed_exploits/"
 blacklist = ("cancel","remove","delete")
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -86,8 +90,8 @@ def check_for_forms(session,r,root,url):
                     formMethod = None
                     param.clear()
         if newTarget and formMethod:
-            print "form check success\n"
-            print "url, data is " + newTarget + "," + param + "\n"
+            #print "form check success\n"
+            #print "url, data is " + newTarget + "," + param + "\n"
             if "post" in formMethod.lower():
                 r = session.post(newTarget, data=param, verify=False)
             elif "get" in formMethod.lower():
@@ -134,13 +138,12 @@ def GetLoginCredentials(app,admin_flag):
 
 
 #Read possible payloads from txt file
-with open('../webcrawler/webcrawler/xss_payloads.txt') as payloads_file:
+with open('../webcrawler/webcrawler/tmp_xss_payloads.txt') as payloads_file:
     payloads = payloads_file.read().splitlines();
 
 #payloads = ["<script>alert('XSS');</script>"]
 driver = webdriver.Firefox()
 attackString = "XSS"
-
 
 input_file_path = "../webcrawler/webcrawler/crawler_output"
 count = 0
@@ -149,7 +152,7 @@ for input_file in os.listdir(input_file_path):
     count = count + 1
     with open(input_file_path+"/"+input_file) as injection_file:
         injection_points = json.load(injection_file)
-    print "Current reading file "+ input_file + "\n"
+    log_text += "Current reading file "+ input_file + "\n"
     #Iterating through injection points, and trying each payload for them
     for tmp in injection_points:
         action_url = tmp["action"]
@@ -163,7 +166,7 @@ for input_file in os.listdir(input_file_path):
         login_data = GetLoginCredentials(current_app,admin_flag)
 
         login_url = login_data["login_url"]
-        print "Currently checking the url " + action_url + "\n" + "login url is " + login_url + "\n"
+        log_text += "Currently checking the url " + action_url + "\n" + "login url is " + login_url + "\n"
         username_key = "username"
         password_key = "password"
         if (tmp.get("login")):
@@ -190,7 +193,7 @@ for input_file in os.listdir(input_file_path):
         printit = 0
         #Iterate through the all the payloads until something works
         for payload in payloads:
-            print "The payload is " + payload + "\n"
+            log_text += "The payload is " + payload + "\n"
             param_values = dict()
             for param in params:
                 if "=" in param.lower():
@@ -227,7 +230,7 @@ for input_file in os.listdir(input_file_path):
                     if EC.alert_is_present():
                         alert = driver.switch_to_alert()
                         if attackString in alert.text:
-                            print "Exploit verified in " + driver.current_url + "\n"
+                            log_text += "Exploit verified in " + driver.current_url + "\n"
                             success_flag = 1
                         alert.accept()
                         driver.implicitly_wait(2)
@@ -250,6 +253,8 @@ for input_file in os.listdir(input_file_path):
                 out_object = dict(url = out_url,reflected_pages = out_reflected_url, method = out_method, params = out_params)
                 with open(output_file_name, 'w') as fp:
                     json.dump(out_object,fp)
-print "Total number of files read is ", count
-print "\n"
+    if(count == 1):
+        break
+
+log_file.write(log_text)
 driver.quit()
