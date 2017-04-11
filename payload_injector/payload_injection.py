@@ -155,6 +155,7 @@ for input_file in os.listdir(input_file_path):
     log_text += "Current reading file "+ input_file + "\n"
     #Iterating through injection points, and trying each payload for them
     for tmp in injection_points:
+        log_text = ""
         action_url = tmp["action"]
         current_app = ""
         admin_flag = 0
@@ -238,7 +239,6 @@ for input_file in os.listdir(input_file_path):
                     success_flag = 0
                 if (success_flag == 1):
                     break
-
             driver.close()
             #if exploit was successfull write details to a json file
             if(success_flag == 1):
@@ -253,8 +253,8 @@ for input_file in os.listdir(input_file_path):
                 out_object = dict(url = out_url,reflected_pages = out_reflected_url, method = out_method, params = out_params)
                 with open(output_file_name, 'w') as fp:
                     json.dump(out_object,fp)
+                break
+        log_file.write(log_text)
     if(count == 1):
         break
-
-log_file.write(log_text)
 driver.quit()
