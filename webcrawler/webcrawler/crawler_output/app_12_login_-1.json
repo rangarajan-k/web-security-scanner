@@ -1,0 +1,4 @@
+[
+{"action": "https://app13.com/windows/code.php", "param": ["file"], "method": "GET", "reflected_pages": ["https://app13.com/windows/code.php"]},
+{"action": "https://app13.com/windows/function.php", "param": ["file"], "method": "GET", "reflected_pages": ["https://app13.com/windows/function.php"]}
+]

@@ -44,6 +44,12 @@ class WebSpider(CrawlSpider):
     def start_requests(self):
         self.logger.info("Start Request")
         self.total_login = len(self.data[self.app_index]['logins'])
+        # skip login detail when no login
+        if self.login_index == -1:
+            self.login_url = self.data[self.app_index]['starting_url']
+            self.current_domain = urlparse.urlparse(self.login_url).netloc
+            return [Request(url=self.data[self.app_index]['starting_url'], dont_filter=True)]
+
         login = self.data[self.app_index]["logins"][self.login_index]
         self.login_url = login['url']
         self.login_detail = {'username': login['username'], 'password': login['password']}
@@ -117,7 +123,8 @@ class WebSpider(CrawlSpider):
             if item['method'] is None:
                 item['method'] = 'GET'
             # Reflected_page
-            item['login'] = self.login_detail
+            if self.login_index != -1:
+                item['login'] = self.login_detail
             item['reflected_pages'] = [response.url]
             if response.url != action_page:
                 item['reflected_pages'].append(action_page)

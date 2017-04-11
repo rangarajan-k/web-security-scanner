@@ -141,7 +141,153 @@
   },
   {
     "starting_url": "https://app10.com",
+    "logins": []
+  },
+  {
+    "starting_url": "https://app11.com",
     "logins": [
+      {
+        "url": "https://app11.com",
+        "username": "admin",
+        "password": "admin"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app12.com",
+    "logins": [
+      {
+        "url": "https://app12.com",
+        "username": "admin",
+        "password": "AdminAdmin1!"
+      },
+      {
+        "url": "https://app12.com",
+        "username": "test",
+        "password": "TestTest1!"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app13.com",
+    "logins": []
+  },
+  {
+    "starting_url": "https://app14.com",
+    "logins": [
+      {
+        "url": "https://app14.com",
+        "username": "admin@admin.com",
+        "password": "admin"
+      },
+      {
+        "url": "https://app14.com",
+        "username": "dev@dev.com",
+        "password": "developer"
+      },
+      {
+        "url": "https://app14.com",
+        "username": "manager@manager.com",
+        "password": "manager"
+      },
+      {
+        "url": "https://app14.com",
+        "username": "user@user.com",
+        "password": "user"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app15.com",
+    "logins": [
+      {
+        "url": "https://app15.com/www/index.php",
+        "username": "admin",
+        "password": "admin"
+      },
+      {
+        "url": "https://app15.com/www/index.php",
+        "username": "professor",
+        "password": "professor"
+      },
+      {
+        "url": "https://app15.com/www/index.php",
+        "username": "student",
+        "password": "student"
+      },
+      {
+        "url": "https://app15.com/www/index.php",
+        "username": "student2",
+        "password": "student2"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app16.com",
+    "logins": [
+      {
+        "url": "https://app16.com/ajaxfilemanager.php",
+        "username": "admin",
+        "password": "admin"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app17.com",
+    "logins": [
+      {
+        "url": "https://app17.com",
+        "username": "admin@admin.com",
+        "password": "admin"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app18.com",
+    "logins": []
+  },
+  {
+    "starting_url": "https://app18.com",
+    "logins": [
+      {
+        "url": "https://app18.com/wp-admin",
+        "username": "admin",
+        "password": "admin"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app19.com",
+    "logins": [
+      {
+        "url": "https://app19.com",
+        "username": "admin",
+        "password": "admin"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app20.com",
+    "logins": []
+  },
+  {
+    "starting_url": "https://app20.com",
+    "logins": [
+      {
+        "url": "https://app20.com/wp-admin",
+        "username": "admin",
+        "password": "admin"
+      }
+    ]
+  },
+  {
+    "starting_url": "https://app21.com",
+    "logins": [
+      {
+        "url": "https://app21.com",
+        "username": "admin",
+        "password": "admin"
+      }
     ]
   }
 ]
